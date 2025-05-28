@@ -13,7 +13,7 @@ def check_role(user):
     if role not in ALLOWED_ROLES:
         raise HTTPException(status_code=403, detail=f"Unauthorized User: role is '{role}'")
 
-@router.get("/html", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse)
 async def mri_list_html(
     request: Request,
     page: int = Query(1, ge=1),
@@ -26,12 +26,12 @@ async def mri_list_html(
     pagination = {"page": page, "total_pages": 10, "has_previous": page > 1, "has_next": True}
     return templates.TemplateResponse("mri_list.html", {"request": request, "mris": mris, "pagination": pagination})
 
-@router.get("/html/create", response_class=HTMLResponse)
+@router.get("/create", response_class=HTMLResponse)
 async def mri_create_form(request: Request, user=Depends(get_current_user)):
     check_role(user)
     return templates.TemplateResponse("mri_create.html", {"request": request, "errors": []})
 
-@router.post("/html/create", response_class=HTMLResponse)
+@router.post("/create", response_class=HTMLResponse)
 async def mri_create_post(
     request: Request,
     fecha: str = Form(...),
