@@ -1,7 +1,12 @@
+motor
+pydantic[email]
 fastapi
 uvicorn
-sqlalchemy
-psycopg2-binary
-python-jose[cryptography]
 python-dotenv
+cryptography
+python-jose[cryptography]
 requests
+jinja2
+python-multipart
+httpx
+itsdangerous

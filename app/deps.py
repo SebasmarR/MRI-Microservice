@@ -34,7 +34,7 @@ def get_current_user_info(token: str = Depends(oauth2_scheme)) -> dict:
 
 def require_roles(allowed_roles: list[str]):
     def role_checker(user_info: dict = Depends(get_current_user_info)):
-        role = user_info.get("nickname")  # Cambia si usas otro campo para roles
+        role = user_info.get("nickname")
         if role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

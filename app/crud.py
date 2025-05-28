@@ -1,25 +1,21 @@
-from sqlalchemy.orm import Session
-from . import models, schemas
-from .crypto_utils import encrypt, decrypt
+from app.database import db
+from app.schemas import MRICreate
+from app.crypto_utils import encrypt, decrypt
 
-def create_mri(db: Session, data: schemas.MRICreate, usuario_id: str):
-    encrypted_description = encrypt(data.descripcion)
-    mri = models.MRI(
-        usuario_id=usuario_id,
-        fecha=data.fecha,
-        hora=data.hora,
-        descripcion=encrypted_description
-    )
-    db.add(mri)
-    db.commit()
-    db.refresh(mri)
-    return mri
+async def create_mri(data: MRICreate, usuario_id: str):
+    doc = data.dict()
+    doc["usuario_id"] = usuario_id
+    doc["descripcion"] = encrypt(doc["descripcion"])
+    result = await db.mris.insert_one(doc)
+    return await db.mris.find_one({"_id": result.inserted_id})
 
-def get_mris_by_user(db: Session, usuario_id: str):
-    mris = db.query(models.MRI).filter(models.MRI.usuario_id == usuario_id).all()
-    for mri in mris:
+async def get_mris_by_user(usuario_id: str, skip: int = 0, limit: int = 10):
+    cursor = db.mris.find({"usuario_id": usuario_id}).skip(skip).limit(limit)
+    results = []
+    async for doc in cursor:
         try:
-            mri.descripcion = decrypt(mri.descripcion)
+            doc["descripcion"] = decrypt(doc["descripcion"])
         except Exception:
-            mri.descripcion = "Descripción no disponible"
-    return mris
+            doc["descripcion"] = "Descripción no disponible"
+        results.append(doc)
+    return results

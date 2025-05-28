@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Listado de MRIs</h2>
+        <a href="/mris/html/create" class="btn btn-success">
+            <i class="fas fa-plus"></i> Nuevo MRI
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mri in mris %}
+                <tr>
+                    <td>{{ mri.fecha }}</td>
+                    <td>{{ mri.hora }}</td>
+                    <td>{{ mri.descripcion }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">No hay registros de MRI.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if pagination.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ pagination.page - 1 }}">Anterior</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Primera</span></li>
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">Página {{ pagination.page }} de {{ pagination.total_pages }}</span>
+                </li>
+                {% if pagination.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ pagination.page + 1 }}">Siguiente</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ pagination.total_pages }}">Última &raquo;</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                    <li class="page-item disabled"><span class="page-link">Última</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
