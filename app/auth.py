@@ -30,13 +30,32 @@ async def callback(request: Request, code: str = None):
         return HTMLResponse("Error: no code in callback", status_code=400)
 
     token_url = f"https://{AUTH0_DOMAIN}/oauth/token"
+    headers = {"content-type": "application/x-www-form-urlencoded"}
     data = {
         "grant_type": "authorization_code",
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
         "code": code,
-        "redirect_uri": CALLBACK_URL,  # Debe ser igual que en Auth0 y .env
+        "redirect_uri": CALLBACK_URL,
     }
+
+    async with httpx.AsyncClient() as client:
+        token_resp = await client.post(token_url, data=data, headers=headers)
+        token_resp.raise_for_status()
+        tokens = token_resp.json()
+
+        userinfo_url = f"https://{AUTH0_DOMAIN}/userinfo"
+        userinfo_resp = await client.get(userinfo_url, headers={"Authorization": f"Bearer {tokens['access_token']}"})
+        userinfo_resp.raise_for_status()
+        userinfo = userinfo_resp.json()
+
+    request.session["user"] = {
+        "access_token": tokens["access_token"],
+        "id_token": tokens.get("id_token"),
+        "userinfo": userinfo,
+    }
+
+    return RedirectResponse(url=APP_URL)
 
 
 @router.get("/logout")
