@@ -15,7 +15,7 @@
                 </ul>
             </div>
             {% endif %}
-            <form method="POST" action="/mris/html/create">
+            <form method="POST" action="/mri/create">
                 <div class="form-group">
                     <label for="fecha">Fecha:</label>
                     <input type="date" name="fecha" id="fecha" class="form-control" required>
@@ -29,7 +29,7 @@
                     <textarea name="descripcion" id="descripcion" class="form-control" required></textarea>
                 </div>
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="/mris/html" class="btn btn-outline-secondary">Cancelar</a>
+                    <a href="/mri" class="btn btn-outline-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-success">Crear MRI</button>
                 </div>
             </form>
