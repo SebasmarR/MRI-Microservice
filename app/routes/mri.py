@@ -6,7 +6,7 @@ from app.templates import templates
 from app.auth import get_current_user
 
 router = APIRouter()
-ALLOWED_ROLES = ['missanoguga', 'sebastianmartinezarias']
+ALLOWED_ROLES = ['missanoguga', 'sebastianmartinezarias','sebasmar2015']
 
 def check_role(user):
     role = user["userinfo"].get("nickname")
@@ -44,7 +44,7 @@ async def mri_create_post(
     try:
         data = schemas.MRICreate(fecha=fecha, hora=hora, descripcion=descripcion)
         await crud.create_mri(data, user["userinfo"]["sub"])
-        return RedirectResponse(url="/mris/html", status_code=HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/mri/", status_code=HTTP_303_SEE_OTHER)
     except Exception as e:
         errors.append(str(e))
         return templates.TemplateResponse("mri_create.html", {"request": request, "errors": errors})
