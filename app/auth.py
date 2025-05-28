@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Depends
 from fastapi.responses import RedirectResponse, HTMLResponse
 import httpx
 import os
@@ -53,3 +53,9 @@ def get_current_user(request: Request):
     if not user:
         raise HTTPException(status_code=401, detail="No autenticado")
     return user
+
+@router.get("/me")
+async def read_me(user=Depends(get_current_user)):
+    userinfo = user.get("userinfo", {})
+    nickname = userinfo.get("nickname", "Sin nickname")
+    return {"nickname": nickname, "userinfo": userinfo}

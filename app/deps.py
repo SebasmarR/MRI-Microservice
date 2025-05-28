@@ -32,6 +32,7 @@ def get_current_user_info(token: str = Depends(oauth2_scheme)) -> dict:
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Token inválido: {str(e)}")
 
+
 def require_roles(allowed_roles: list[str]):
     def role_checker(user_info: dict = Depends(get_current_user_info)):
         role = user_info.get("nickname")
