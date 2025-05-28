@@ -14,6 +14,7 @@
                     <th>Fecha</th>
                     <th>Hora</th>
                     <th>Descripción</th>
+                    <th>Paciente ID</th>  <!-- nueva columna -->
                 </tr>
             </thead>
             <tbody>
@@ -22,10 +23,11 @@
                     <td>{{ mri.fecha }}</td>
                     <td>{{ mri.hora }}</td>
                     <td>{{ mri.descripcion }}</td>
+                    <td>{{ mri.paciente_id }}</td>  <!-- mostrar paciente_id -->
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="3" class="text-center text-muted">No hay registros de MRI.</td>
+                    <td colspan="4" class="text-center text-muted">No hay registros de MRI.</td>
                 </tr>
                 {% endfor %}
             </tbody>

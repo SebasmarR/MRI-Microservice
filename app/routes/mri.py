@@ -37,14 +37,16 @@ async def mri_create_post(
     fecha: str = Form(...),
     hora: str = Form(...),
     descripcion: str = Form(...),
+    paciente_id: str = Form(...),  # nuevo campo
     user=Depends(get_current_user),
 ):
     check_role(user)
     errors = []
     try:
-        data = schemas.MRICreate(fecha=fecha, hora=hora, descripcion=descripcion)
+        data = schemas.MRICreate(fecha=fecha, hora=hora, descripcion=descripcion, paciente_id=paciente_id)
         await crud.create_mri(data, user["userinfo"]["sub"])
         return RedirectResponse(url="/mri/", status_code=HTTP_303_SEE_OTHER)
     except Exception as e:
         errors.append(str(e))
         return templates.TemplateResponse("mri_create.html", {"request": request, "errors": errors})
+

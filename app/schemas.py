@@ -25,6 +25,7 @@ class MRICreate(BaseModel):
     fecha: date
     hora: time
     descripcion: str
+    paciente_id: str    
 
 class MRIOut(MRICreate):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")

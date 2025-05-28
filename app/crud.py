@@ -11,6 +11,7 @@ async def create_mri(data: MRICreate, usuario_id: str):
     result = await db.mris.insert_one(doc)
     return await db.mris.find_one({"_id": result.inserted_id})
 
+
 from datetime import date, time
 
 async def get_mris_by_user(usuario_id: str, skip: int = 0, limit: int = 10):
@@ -23,7 +24,11 @@ async def get_mris_by_user(usuario_id: str, skip: int = 0, limit: int = 10):
                 doc["fecha"] = date.fromisoformat(doc["fecha"])
             if "hora" in doc:
                 doc["hora"] = time.fromisoformat(doc["hora"])
+            if "paciente_id" not in doc:
+                doc["paciente_id"] = "No asignado"
         except Exception:
             doc["descripcion"] = "Descripción no disponible"
+            if "paciente_id" not in doc:
+                doc["paciente_id"] = "No asignado"
         results.append(doc)
     return results
